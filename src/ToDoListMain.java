@@ -12,9 +12,10 @@ public class ToDoListMain {
      *
      */
     public static String[] model = new String[10];
+    public static java.util.Scanner scanner = new java.util.Scanner(System.in);
 
     public static void main(String[] args) {
-        testAdd();
+        viewShowList();
     }
 
     /**
@@ -97,8 +98,14 @@ public class ToDoListMain {
         if(model[number-1] == null) {
             return false;
         }else {
-            //if not empty then remove the data
-            model[number-1] = null;
+            //if not empty then remove the data and make rest of list up
+            for(var i = number - 1; i < model.length; i++){
+                if(i == model.length - 1) {
+                    model[i] = null;
+                }else{
+                    model[i] = model[i+1];
+                }
+            }
             return true;
         }
     }
@@ -107,26 +114,151 @@ public class ToDoListMain {
      * Testing if to do on number inputted was removed correctly
      */
     public static void testRemove(){
+        add("Test1");
+        add("Test2");
+        add("Test3");
+
+        var result = remove(20);
+        System.out.println("Result : " + result);
+
+        var result2 = remove(1);
+        System.out.println("Result : " + result2);
+
+        var result3 = remove(2);
+        System.out.println("Result : " + result3);
+
+        showList();
+    }
+
+    /**
+     * Make Input function where user input a data
+     * @return String data
+     */
+    public static String input(String command){
+        System.out.print(command + " : ");
+        return scanner.nextLine();
+    }
+
+    /**
+     * Test input function
+     */
+    public static void testInput(){
+        var info = input("Masukan Nama");
+        System.out.println("Hi " + info);
+
+        var info2 = input("Masukan tanggal lahir");
+        System.out.println("Tanggal lahir : " + info2);
     }
 
     /**
      * Procedure to show view of list
      */
     public static void viewShowList(){
+        loop : while(true){
+            System.out.println("TO DO LIST");
+            showList();
 
+            System.out.println("==================");
+            System.out.println("MENU");
+            System.out.println("1. Tambah");
+            System.out.println("2. Hapus");
+            System.out.println("X. Keluar");
+
+            var menu = input("Pilh Menu");
+
+            switch (menu){
+                case "1" -> {
+                    viewAddToDo();
+                }
+                case "2" -> {
+                    viewRemoveToDo();
+                }
+                case "X" -> {
+                    System.out.println("Close");
+                    break loop;
+                }
+                default -> System.out.println("Menu tidak ada \n");
+            }
+        }
+    }
+
+    /**
+     * Testing view show list with menu after add some test data
+     */
+    public static void testViewShowList(){
+        add("Test 1");
+        add("Test 2");
+        add("Test 3");
+        add("Test 4");
+        add("Test 5");
+
+        viewShowList();
     }
 
     /**
      * Procedure to show view to add To-Do
      */
     public static void viewAddToDo(){
+        System.out.println("===========================");
+        System.out.println("ADD TO DO");
+        var todo = input("Masukan To Do");
+        var confirmation = input("Anda yakin? (1. Ya | 2. Tidak)");
+        switch (confirmation){
+            case "1" -> {
+                //ya
+                add(todo);
+            }
+            case "2" -> {
+                //batal
+                viewShowList();
+            }
+        }
+    }
 
+    /**
+     * Testing view add Todo
+     */
+    public static void testViewAddToDo(){
+        viewAddToDo();
+        showList();
     }
 
     /**
      * Procedure to show view to remove To-Do
      */
     public static void viewRemoveToDo(){
+        System.out.println("=================");
+        System.out.println("HAPUS TO DO LIST");
+        showList();
 
+        var todo = input("Pilh To Do yang akan dihapus");
+        var confirmation = input("Anda yakin? (1. Ya | 2. Tidak)");
+        switch (confirmation){
+            case "1" -> {
+                //ya
+                boolean result = remove(Integer.valueOf(todo));
+                if(result){
+                    System.out.println("Sukses menghapus To Do");
+                }else{
+                    System.out.println("Gagal menghapus To Do list ke-" + todo);
+                }
+            }
+            case "2" -> {
+                //batal
+                viewShowList();
+            }
+        }
+    }
+
+    /**
+     * Testing view remove to do list
+     */
+    public static void testViewRemoveToDo(){
+        add("Test 1");
+        add("Test 2");
+        add("Test 3");
+
+        viewRemoveToDo();
+        showList();
     }
 }
